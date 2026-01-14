@@ -1,50 +1,112 @@
-# Welcome to your Expo app 👋
+# Rjúpa – Mobilapplikasjon (`rjupa-app`)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Dette er selve mobilapplikasjonen i Rjúpa-prosjektet.  
+Applikasjonen er bygget med **Expo (React Native)** og bruker **Firebase** som backend.
 
-## Get started
+---
 
-1. Install dependencies
+## Teknologi
+- **Expo SDK**
+- **React Native**
+- **TypeScript** (strict)
+- **Expo Router** (filbasert navigasjon)
+- **Firebase**
+  - Authentication
+  - Firestore
+  - Hosting
+- **NativeWind / Tailwind**
+- **ESLint**
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Start the app
+## Mappestruktur
+- rjupa-app/
+- ├── app/ # Expo Router (skjermer & navigasjon)
+- │ ├── (tabs)/ # Tab-navigasjon
+- │ ├── _layout.tsx # Root layout
+- │ ├── index.tsx # Startskjerm
+- │ └── settings.tsx
+- │
+- ├── src/
+- │ ├── components/ # Gjenbrukbare komponenter
+- │ │ ├── RjupaHeader.tsx
+- │ │ ├── RjupaDrawerContent.tsx
+- │ │ └── PrimaryButton.tsx
+- │ │
+- │ ├── constants/ # Tema og konstanter
+- │ │ └── theme.ts
+- │ │
+- │ ├── context/ # React Context
+- │ │ └── CurrentTestContext.tsx
+- │ │
+- │ ├── lib/ # Firebase & utils
+- │ │ ├── firebase.ts
+- │ │ ├── storage.ts
+- │ │ └── validate.ts
+- │ │
+- │ └── types/ # TypeScript-typer
+- │ └── test.ts
+- │
+- ├── assets/ # Bilder, ikoner
+- ├── .env # Miljøvariabler (lokalt)
+- ├── app.json
+- ├── babel.config.js
+- ├── metro.config.js
+- ├── tailwind.config.js
+- ├── tsconfig.json
+- └── package.json
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## Miljøvariabler
+Prosjektet bruker Firebase. Opprett en `.env` i root av `rjupa-app/`:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```env
+EXPO_PUBLIC_FIREBASE_API_KEY=xxxx
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=xxxx
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=xxxx
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=xxxx
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=xxxx
+EXPO_PUBLIC_FIREBASE_APP_ID=xxxx
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Kjør prosjektet lokalt
 
-## Learn more
+1. Installer avhengigheter
+- npm install
 
-To learn more about developing your project with Expo, look at the following resources:
+2. Start Expo
+- npx expo start
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+## Navigasjon
 
-Join our community of developers creating universal apps.
+Applikasjonen bruker Expo Router:
+- Filstruktur = navigasjon
+- app/(tabs) → tab bar
+- Drawer åpnes via custom header
+- RjupaHeader og RjupaDrawerContent håndterer meny
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+## UI & Design
+
+- Sentralisert tema i src/constants/theme.ts
+- NativeWind/Tailwind for konsistent styling
+- Fokus på:
+   - Enkel navigasjon
+   - Mobil-first design
+   - God lesbarhet og kontrast
+
+---
+
+## Utviklere
+Prosjektet er utviklet som del av bachelor i IT - Frontend og mobilutvikling & Programmering.
+
+Team:
+- Benedikte Dybsjord
+- Victoria Ludvigsen
+- Marcus André Bekkelund
+- Henrik André Hansen
+- Samer Khatib
