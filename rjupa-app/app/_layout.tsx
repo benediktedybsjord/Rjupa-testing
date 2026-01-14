@@ -1,10 +1,11 @@
 import "react-native-gesture-handler";
 import React from "react";
 import { Drawer } from "expo-router/drawer";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
 import RjupaHeader from "../src/components/RjupaHeader";
 import RjupaDrawerContent from "../src/components/RjupaDrawerContent";
 import { theme } from "../src/constants/theme";
-
 
 export default function RootLayout() {
   return (
