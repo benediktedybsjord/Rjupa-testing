@@ -13,34 +13,15 @@ export default function RjupaHeader({ navigation }: DrawerHeaderProps) {
 
   return (
     <View
-      style={{
-        paddingTop: topPad,
-        backgroundColor: theme.colors.sand,
-        paddingHorizontal: 16,
-        minHeight: 56,
-        paddingVertical: 10,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        borderBottomWidth: 1,
-        borderBottomColor: theme.colors.cardBorder,
-      }}
+      className="bg-sand px-4 py-[10px] min-h-[56px] flex-row items-center justify-between border-b border-border-subtle"
+      style={{ paddingTop: topPad }}
     >
       {/* Logo */}
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          marginLeft: -45, 
-        }}
-      >
+      <View className="flex-row items-center ml-[-45px]">
         <Image
           source={require("../assets/logo/Rjupa-Testing.png")}
-          style={{
-            width: 140,
-            height: 40,
-            resizeMode: "contain",
-          }}
+          className="w-[140px] h-[40px]"
+          style={{ resizeMode: "contain" }}
           accessibilityRole="image"
           accessibilityLabel="Rjúpa logo"
         />
@@ -52,13 +33,22 @@ export default function RjupaHeader({ navigation }: DrawerHeaderProps) {
         hitSlop={12}
         accessibilityRole="button"
         accessibilityLabel="Åpne meny"
-        style={({ pressed }) => [
-          { padding: 8, borderRadius: 12 },
-          pressed && {
-            backgroundColor: theme.colors.bg,
-            opacity: 0.9,
-          },
-        ]}
+        className="p-2 rounded-[12px]"
+        style={({ pressed }) =>
+          pressed
+            ? {
+                shadowColor: "#000",
+                shadowOpacity: 0.18,
+                shadowRadius: 8,
+                shadowOffset: { width: 0, height: 2 },
+                elevation: 4,
+                transform: [{ scale: 1.06 }],
+
+                backgroundColor: theme.colors.bg,
+                opacity: 0.95,
+              }
+            : undefined
+        }
       >
         <Feather name="menu" size={22} color={theme.colors.icon} />
       </Pressable>

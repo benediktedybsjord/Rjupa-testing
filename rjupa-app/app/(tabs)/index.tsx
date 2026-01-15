@@ -1,167 +1,148 @@
-import React, { useCallback, useState } from "react";
-import { View, Text, Image } from "react-native";
-import { theme } from "../../src/constants/theme";
+import React, { useCallback, useMemo, useState } from "react";
+import { View, Text, Image, Pressable } from "react-native";
+import { router } from "expo-router";
 import { ScreenScroll } from "../../src/components/ScreenScroll";
+
+const LOGO = require("../../src/assets/logo/Rjupa-Testing.png");
+
+function StatusChip({ text }: { text: string }) {
+  return (
+    <View className="self-start rounded-full border border-card-border bg-bg px-2.5 py-1.5">
+      <Text className="font-body text-xs text-muted">{text}</Text>
+    </View>
+  );
+}
 
 export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {
+    if (refreshing) return;
     setRefreshing(true);
     try {
-      // TODO (G1):
-      // - Re-read latest analyses from SQLite / AsyncStorage
-      // - Recalculate derived metrics if needed
-      // - Update "last updated" state
+      // TODO: Replace with real refresh logic (e.g. read from local store: available analyses, history).
       await new Promise((resolve) => setTimeout(resolve, 400));
     } finally {
       setRefreshing(false);
     }
+  }, [refreshing]);
+
+  // TODO: Connect “available analyses” from local storage later.
+  const availableAnalyses = useMemo(() => 0, []);
+  const canStartNewAnalysis = availableAnalyses > 0;
+
+  const handleNewAnalysis = useCallback(() => {
+    // Adjust route to match the actual flow (metadata → camera).
+    router.push("/create");
+  }, []);
+
+  const handlePurchase = useCallback(() => {
+    router.push("/purchase");
   }, []);
 
   return (
     <ScreenScroll refreshing={refreshing} onRefresh={onRefresh}>
-      {/* NativeWind layout + Style */}
       <View
-        style={{
-          borderWidth: 1,
-          borderColor: theme.colors.cardBorder,
-          borderRadius: 12,
-          overflow: "hidden",
-          backgroundColor: theme.colors.bg,
-        }}
+        className="overflow-hidden rounded-card border border-card-border bg-bg"
+        accessibilityRole="summary"
+        accessibilityLabel="Hjem"
       >
         {/* Logo / hero */}
-        <View
-          style={{
-            height: 180,
-            backgroundColor: theme.colors.sand,
-            alignItems: "center",
-            justifyContent: "center",
-            paddingHorizontal: 16,
-          }}
-        >
+        <View className="h-[180px] items-center justify-center bg-sand px-4">
           <Image
-            source={require("../../src/assets/logo/Rjupa-Testing.png")}
-            style={{
-              width: 300,
-              height: 100,
-              resizeMode: "contain",
-            }}
+            source={LOGO}
+            className="h-[75px] w-[130px]"
+            resizeMode="contain"
             accessibilityRole="image"
-            accessibilityLabel="Rjupa-testing logo"
+            accessibilityLabel="Rjúpa-testing logo"
           />
         </View>
 
-        {/* Subtle divider */}
-        <View
-          style={{
-            height: 1,
-            backgroundColor: theme.colors.cardBorder,
-          }}
-        />
+        {/* Divider */}
+        <View className="h-px bg-card-border" />
 
         {/* Content */}
-        <View style={{ paddingHorizontal: 14, paddingVertical: 12 }}>
-          {/* Title */}
-          <Text
-            style={{
-              fontFamily: theme.fonts.heading || theme.fonts.headingFallback,
-              fontSize: 18,
-              color: theme.colors.text,
-            }}
-          >
+        <View className="px-[14px] py-3">
+          <Text className="font-heading text-[18px] text-text">
             Rjúpa-testing
           </Text>
 
-          {/* Subtitle */}
-          <Text
-            style={{
-              marginTop: 4,
-              fontFamily: theme.fonts.body || theme.fonts.bodyFallback,
-              color: theme.colors.muted,
-            }}
-          >
+          <Text className="mt-1 font-body text-muted">
             Presis analyse av skuddbilder for hagleskyttere
           </Text>
 
-          {/* Tag / chip */}
-          <View
-            style={{
-              alignSelf: "flex-start",
-              marginTop: 10,
-              paddingHorizontal: 10,
-              paddingVertical: 6,
-              borderRadius: 999,
-              borderWidth: 1,
-              borderColor: theme.colors.cardBorder,
-              backgroundColor: theme.colors.bg,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: theme.fonts.body || theme.fonts.bodyFallback,
-                color: theme.colors.muted,
-                fontSize: 12,
-              }}
-            >
-              Offline • Lokal analyse • G1
+          <View className="mt-2.5 flex-row flex-wrap gap-2">
+            <StatusChip text="Offline" />
+            <StatusChip text="Lokal analyse" />
+            <StatusChip text="G1" />
+          </View>
+
+          <Text className="mt-2.5 font-body leading-5 text-muted">
+            Ta bilde av skiva, la appen telle haglhull og beregne nøkkeltall
+            (trangboring, kjerne og fordeling). Resultatene lagres lokalt og kan
+            sammenlignes i historikken.
+          </Text>
+
+          {/* Availability */}
+          <View className="mt-3 rounded-card border border-card-border bg-sand px-3 py-2">
+            <Text className="font-body text-[13px] text-text">
+              Tilgjengelige analyser:{" "}
+              <Text className="font-heading text-[13px] text-text">
+                {availableAnalyses}
+              </Text>
+            </Text>
+            <Text className="mt-0.5 font-body text-[12px] text-muted">
+              {canStartNewAnalysis
+                ? "Du kan starte en ny analyse nå."
+                : "Kjøp analyser for å starte ny test."}
             </Text>
           </View>
 
-          {/* Body / welcome text */}
-          <Text
-            style={{
-              marginTop: 10,
-              fontFamily: theme.fonts.body || theme.fonts.bodyFallback,
-              color: theme.colors.muted,
-              lineHeight: 20,
-            }}
-          >
-            Velkommen til Rjúpa-Testing. Her kan du ta bilde av skuddbilder, analysere
-            fordeling og få innsikt som hjelper deg å forbedre presisjon og
-            utstyrstilpasning.
-          </Text>
-
-          {/* Optional CTA row (UI only) */}
-          <View
-            style={{
-              marginTop: 14,
-              paddingTop: 12,
-              borderTopWidth: 1,
-              borderTopColor: theme.colors.cardBorder,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: theme.fonts.body || theme.fonts.bodyFallback,
-                color: theme.colors.muted,
-                fontSize: 13,
-              }}
-            >
+          {/* Actions */}
+          <View className="mt-3.5 flex-row items-center justify-between border-t border-card-border pt-3">
+            <Text className="font-body text-[13px] text-muted">
               Klar for ny analyse?
             </Text>
 
-            <View
-              style={{
-                paddingHorizontal: 12,
-                paddingVertical: 8,
-                borderRadius: 12,
-                backgroundColor: theme.colors.sand,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: theme.fonts.body || theme.fonts.bodyFallback,
-                  color: theme.colors.text,
-                  fontSize: 13,
-                }}
+            <View className="flex-row gap-2">
+              {!canStartNewAnalysis && (
+                <Pressable
+                  onPress={handlePurchase}
+                  className="rounded-card border border-card-border bg-bg px-3 py-2"
+                  accessibilityRole="button"
+                  accessibilityLabel="Kjøp analyser"
+                  hitSlop={10}
+                >
+                  <Text className="font-body text-[13px] text-text">Kjøp</Text>
+                </Pressable>
+              )}
+
+              <Pressable
+                onPress={handleNewAnalysis}
+                disabled={!canStartNewAnalysis}
+                className={[
+                  "rounded-card px-3 py-2",
+                  canStartNewAnalysis ? "bg-sand" : "bg-card-border",
+                ].join(" ")}
+                accessibilityRole="button"
+                accessibilityLabel="Ny analyse"
+                accessibilityHint={
+                  canStartNewAnalysis
+                    ? "Starter en ny analyse"
+                    : "Kjøp analyser for å starte"
+                }
+                accessibilityState={{ disabled: !canStartNewAnalysis }}
+                hitSlop={10}
               >
-                Ny analyse
-              </Text>
+                <Text
+                  className={[
+                    "font-body text-[13px]",
+                    canStartNewAnalysis ? "text-text" : "text-muted",
+                  ].join(" ")}
+                >
+                  Ny analyse
+                </Text>
+              </Pressable>
             </View>
           </View>
         </View>

@@ -8,25 +8,23 @@ module.exports = {
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
-      /* Colors – from theme.ts */
       colors: {
         sand: "#E3DCCC",
-        text: "#111111",
+        text: "#000000",
         bg: "#FFFFFF",
-        icon: "#111111",
+        icon: "#000000",
         muted: "#555555",
-        card: {
-          border: "#E6E1D6",
-        },
-      },
 
-      /* Fonts – fallback now, Tenon later */
+        // existing
+        "card-border": "#E6E1D6",
+
+        // new – lighter, subtle border (same tone, lower contrast)
+        "border-subtle": "rgba(230, 225, 214, 0.6)",
+      },
       fontFamily: {
         heading: ["System"],
         body: ["System"],
       },
-
-      /* Border radius tokens */
       borderRadius: {
         card: "12px",
       },

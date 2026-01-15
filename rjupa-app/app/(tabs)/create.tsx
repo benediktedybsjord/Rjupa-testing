@@ -1,81 +1,83 @@
 import React, { useState } from "react";
-import { View, Text, Pressable, Modal, Alert, Image } from "react-native";
+import { View, Text, Pressable, Alert, Image } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
+
 import SelectImageModal from "../../src/components/SelectImageModal";
 
 export default function CreateScreen() {
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
+  const [imageUri, setImageUri] = useState<string | null>(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
 
   const handleOpenCamera = async () => {
-    // Request camera access
     const cameraPerm = await Camera.requestCameraPermissionsAsync();
     if (!cameraPerm.granted) {
       Alert.alert(
-        "Camera access required.",
-        "Please allow camera access to use this feature."
+        "Kameratilgang kreves",
+        "Gi tilgang til kamera for å ta bilde."
       );
       return;
     }
 
-    // Request access to photos (camera roll)
-    const libraryPerm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const libraryPerm =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!libraryPerm.granted) {
       Alert.alert(
-        "Photo access is required.",
-        "Please allow access to Photos to choose an image from your camera roll."
+        "Bildetilgang kreves",
+        "Gi tilgang til bilder for å velge fra galleri."
       );
       return;
     }
 
-    // If everything is ok, open modal
-    setIsCameraOpen(true);
+    setCameraOpen(true);
   };
 
-  //***JSX***//
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>New Analysis</Text>
+    <View className="flex-1 bg-bg">
+      {/* Centered content */}
+      <View className="flex-1 items-center justify-center px-4">
+        <Text className="font-heading text-xl text-text">
+          Ny analyse
+        </Text>
 
-      {/* Show selected image */}
-      {selectedImageUri ? (
-        <Image
-          source={{ uri: selectedImageUri }}
-          style={{
-            width: 280,
-            height: 280,
-            borderRadius: 12,
-            marginTop: 12,
-          }}
-          resizeMode="cover"
-        />
-      ) : (
-        <Text style={{ marginTop: 12 }}>No image selected yet</Text>
-      )}
+        {imageUri ? (
+          <Image
+            source={{ uri: imageUri }}
+            className="mt-4 h-[280px] w-[280px] rounded-card"
+            resizeMode="cover"
+            accessibilityLabel="Valgt bilde"
+          />
+        ) : (
+          <Text className="mt-4 font-body text-muted text-center">
+            Velg eller ta et bilde for å starte analysen
+          </Text>
+        )}
 
-      <Pressable
-        onPress={handleOpenCamera}
-        style={{
-          width: "100%",
-          height: 100,
-          justifyContent: "center",
-          alignItems: "center",
+        <Pressable
+          onPress={handleOpenCamera}
+          accessibilityRole="button"
+          accessibilityLabel="Åpne kamera"
+          className="mt-8 w-full items-center"
+        >
+          <View className="items-center justify-center rounded-card border border-card-border bg-sand/80 px-6 py-5">
+            <Entypo name="camera" size={44} color="#111111" />
+            <Text className="mt-2 font-body text-[13px] font-semibold text-text">
+              Åpne kamera
+            </Text>
+          </View>
+        </Pressable>
+      </View>
+
+      {/* Camera / Image modal */}
+      <SelectImageModal
+        visible={cameraOpen}
+        onClose={() => setCameraOpen(false)}
+        onImageSelected={(uri) => {
+          setImageUri(uri);
+          setCameraOpen(false);
         }}
-      >
-        <Entypo name="camera" size={48} color="black" />
-      </Pressable>
-
-      <Modal visible={isCameraOpen} animationType="slide">
-        <SelectImageModal
-          onClose={() => setIsCameraOpen(false)}
-          onImageSelected={(uri) => {
-            setSelectedImageUri(uri);
-            setIsCameraOpen(false);
-          }}
-        />
-      </Modal>
+      />
     </View>
   );
 }
