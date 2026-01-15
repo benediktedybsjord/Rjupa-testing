@@ -4,7 +4,7 @@ import { View, Text } from "react-native";
 export default function Purchases() {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Kjøp analyse</Text>
+      <Text>Buy Analysis</Text>
     </View>
   );
 }
