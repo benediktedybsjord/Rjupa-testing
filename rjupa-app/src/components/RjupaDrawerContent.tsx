@@ -34,7 +34,10 @@ export default function RjupaDrawerContent(props: DrawerContentComponentProps) {
   const currentRoute = state.routeNames[state.index];
 
   return (
-    <DrawerContentScrollView {...props} contentContainerStyle={styles.container}>
+    <DrawerContentScrollView
+      {...props}
+      contentContainerStyle={styles.container}
+    >
       <View style={styles.header}>
         <Text style={styles.brand}>Rjupa</Text>
         <Text style={styles.sub}>Meny</Text>
@@ -49,8 +52,8 @@ export default function RjupaDrawerContent(props: DrawerContentComponentProps) {
       <Item
         label="Kjøp"
         icon="shopping-bag"
-        active={currentRoute === "purchases"}
-        onPress={() => navigation.navigate("purchases")}
+        active={currentRoute === "purchase"}
+        onPress={() => navigation.navigate("purchase")}
       />
       <Item
         label="Innstillinger"
