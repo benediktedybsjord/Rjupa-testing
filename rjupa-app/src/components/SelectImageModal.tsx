@@ -1,61 +1,86 @@
-import { CameraView, useCameraPermissions } from "expo-camera";
-import React from "react";
-import { View, StyleSheet, Text, Button, TouchableOpacity } from "react-native";
+import React, { useRef, useState } from "react";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { CameraView } from "expo-camera";
+import * as ImagePicker from "expo-image-picker";
 
-export default function SelectImageModal() {
-  const [permission, requestPermission] = useCameraPermissions();
+type Props = {
+  onClose: () => void;
+  onImageSelected: (uri: string) => void;
+};
 
-  if (!permission) {
-    return <View />;
-  }
+export default function SelectImageModal({ onClose, onImageSelected }: Props) {
+  const cameraRef = useRef<CameraView | null>(null);
+  const [isTakingPhoto, setIsTakingPhoto] = useState(false);
 
-  if (!permission.granted) {
-    return (
-      <View style={styles.container}>
-        <Text>The app needs permission to use the camera</Text>
-        <Button onPress={requestPermission} title="Allow permission" />
-      </View>
-    );
-  }
+  const pickImageFromLibrary = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      onImageSelected(result.assets[0].uri);
+    }
+  };
+
+  const takePhoto = async () => {
+    if (isTakingPhoto) return;
+
+    try {
+      setIsTakingPhoto(true);
+
+      if (!cameraRef.current) {
+        Alert.alert("Camera error", "Camera is not ready yet.");
+        return;
+      }
+
+      const photo = await cameraRef.current.takePictureAsync({
+        quality: 1,
+        skipProcessing: true,
+      });
+
+      if (photo?.uri) {
+        onImageSelected(photo.uri);
+      }
+    } catch {
+      Alert.alert("Error", "Could not take photo. Please try again.");
+    } finally {
+      setIsTakingPhoto(false);
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <CameraView style={styles.camera} facing="back" />
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.text}>Cancel</Text>
+    <View className="flex-1">
+      <CameraView ref={cameraRef} className="flex-1" facing="back" />
+
+      <View className="absolute bottom-16 flex-row w-full px-4 gap-[10px]">
+        <TouchableOpacity
+          className="flex-1 items-center py-3 rounded-card"
+          style={{ backgroundColor: "rgba(255,255,255,0.85)" }}
+          onPress={pickImageFromLibrary}
+        >
+          <Text className="text-[16px] font-bold">Choose</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          className="flex-1 items-center py-3 rounded-card"
+          style={{ backgroundColor: "rgba(255,255,255,0.85)" }}
+          onPress={takePhoto}
+        >
+          <Text className="text-[16px] font-bold">
+            {isTakingPhoto ? "..." : "Take Picture"}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          className="flex-1 items-center py-3 rounded-card"
+          style={{ backgroundColor: "rgba(255,255,255,0.85)" }}
+          onPress={onClose}
+        >
+          <Text className="text-[16px] font-bold">Cancel</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  message: {
-    textAlign: "center",
-    paddingBottom: 10,
-  },
-  camera: {
-    flex: 1,
-  },
-  buttonContainer: {
-    position: "absolute",
-    bottom: 64,
-    flexDirection: "row",
-    backgroundColor: "transparent",
-    width: "100%",
-    paddingHorizontal: 64,
-  },
-  button: {
-    flex: 1,
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-});

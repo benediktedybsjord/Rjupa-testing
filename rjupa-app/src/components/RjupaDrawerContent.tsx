@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import type { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { Feather } from "@expo/vector-icons";
@@ -19,12 +19,32 @@ function Item({
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.item, active && styles.itemActive]}
+      className="flex-row items-center px-4 py-3 mx-[10px] mt-[10px] rounded-card"
+      style={{
+        flexDirection: "row",
+        gap: 12,
+        alignItems: "center",
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        borderRadius: 12,
+        marginHorizontal: 10,
+        marginTop: 10,
+        backgroundColor: active ? theme.colors.sand : "transparent",
+      }}
       accessibilityRole="button"
       accessibilityState={{ selected: !!active }}
     >
       <Feather name={icon} size={18} color={theme.colors.icon} />
-      <Text style={styles.itemText}>{label}</Text>
+      <Text
+        className="text-[15px]"
+        style={{
+          fontSize: 15,
+          fontFamily: theme.fonts.body || theme.fonts.bodyFallback,
+          color: theme.colors.text,
+        }}
+      >
+        {label}
+      </Text>
     </Pressable>
   );
 }
@@ -34,10 +54,46 @@ export default function RjupaDrawerContent(props: DrawerContentComponentProps) {
   const currentRoute = state.routeNames[state.index];
 
   return (
-    <DrawerContentScrollView {...props} contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.brand}>Rjupa</Text>
-        <Text style={styles.sub}>Meny</Text>
+    <DrawerContentScrollView
+      {...props}
+      className="bg-bg"
+      contentContainerStyle={{
+        paddingTop: 0,
+        flexGrow: 1,
+        backgroundColor: theme.colors.bg, // fallback
+      }}
+    >
+      <View
+        className="items-center justify-center"
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          paddingTop: 22,
+          paddingBottom: 18,
+          borderBottomWidth: 1,
+          borderBottomColor: theme.colors.cardBorder,
+        }}
+      >
+        <Text
+          className="text-[18px]"
+          style={{
+            fontSize: 18,
+            fontFamily: theme.fonts.heading || theme.fonts.headingFallback,
+            color: theme.colors.text,
+          }}
+        >
+          Rjúpa
+        </Text>
+        <Text
+          className="mt-1"
+          style={{
+            marginTop: 4,
+            fontFamily: theme.fonts.body || theme.fonts.bodyFallback,
+            color: theme.colors.muted,
+          }}
+        >
+          Meny
+        </Text>
       </View>
 
       <Item
@@ -49,8 +105,8 @@ export default function RjupaDrawerContent(props: DrawerContentComponentProps) {
       <Item
         label="Kjøp"
         icon="shopping-bag"
-        active={currentRoute === "purchases"}
-        onPress={() => navigation.navigate("purchases")}
+        active={currentRoute === "purchase"}
+        onPress={() => navigation.navigate("purchase")}
       />
       <Item
         label="Innstillinger"
@@ -59,55 +115,24 @@ export default function RjupaDrawerContent(props: DrawerContentComponentProps) {
         onPress={() => navigation.navigate("settings")}
       />
 
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>© Rjupa</Text>
+      <View
+        className="mt-auto items-center justify-center py-4"
+        style={{
+          marginTop: "auto",
+          alignItems: "center",
+          justifyContent: "center",
+          paddingVertical: 16,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: theme.fonts.body || theme.fonts.bodyFallback,
+            color: theme.colors.muted,
+          }}
+        >
+          © Rjúpa
+        </Text>
       </View>
     </DrawerContentScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 0,
-    flexGrow: 1,
-    backgroundColor: theme.colors.bg,
-  },
-  header: {
-    paddingHorizontal: 16,
-    paddingTop: 18,
-    paddingBottom: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.cardBorder,
-  },
-  brand: {
-    fontSize: 18,
-    fontFamily: theme.fonts.heading || theme.fonts.headingFallback,
-    color: theme.colors.text,
-  },
-  sub: {
-    marginTop: 4,
-    fontFamily: theme.fonts.body || theme.fonts.bodyFallback,
-    color: theme.colors.muted,
-  },
-  item: {
-    flexDirection: "row",
-    gap: 12,
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 12,
-    marginHorizontal: 10,
-    marginTop: 10,
-  },
-  itemActive: { backgroundColor: theme.colors.sand },
-  itemText: {
-    fontSize: 15,
-    fontFamily: theme.fonts.body || theme.fonts.bodyFallback,
-    color: theme.colors.text,
-  },
-  footer: { marginTop: "auto", padding: 16 },
-  footerText: {
-    fontFamily: theme.fonts.body || theme.fonts.bodyFallback,
-    color: theme.colors.muted,
-  },
-});
