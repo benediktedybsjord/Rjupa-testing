@@ -93,7 +93,7 @@ export default function TabsLayout() {
       />
 
       <Tabs.Screen
-        name="create"
+        name="newAnalysis"
         options={{
           title: "",
           tabBarIcon: ({ color, size, focused }) => (
